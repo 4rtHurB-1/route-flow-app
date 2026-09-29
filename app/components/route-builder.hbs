@@ -1,0 +1,62 @@
+<section class="route-builder" aria-busy={{this.isLoading}}>
+    <form class="route-builder__form" {{on "submit" this.buildRoute}}>
+        <div class="route-builder__header">
+            <label class="route-builder__label" for="route-addresses">
+                Адреси
+            </label>
+
+            <LinkTo class="route-builder__history-link" @route="history">
+                Історія маршрутів
+            </LinkTo>
+        </div>
+
+        <textarea
+            id="route-addresses"
+            class="route-builder__textarea"
+            rows="9"
+            value={{this.addresses}}
+            placeholder="Супутника 17&#10;Гаївська 14&#10;Княгині Ольги 14"
+            {{on "input" this.updateAddresses}}
+        ></textarea>
+
+        {{#unless this.pendingMissing}}
+            <button class="route-builder__button" type="submit" disabled={{this.isSubmitDisabled}}>
+                {{#if this.isLoading}}
+                    Будую маршрут…
+                {{else}}
+                    Побудувати маршрут
+                {{/if}}
+            </button>
+        {{/unless}}
+    </form>
+
+    {{#if this.errorMessage}}
+        <p class="route-builder__error" role="alert">
+            {{this.errorMessage}}
+        </p>
+    {{/if}}
+
+    {{#if this.pendingMissing}}
+        <div class="route-builder__missing">
+            {{#each this.missingItems as |item|}}
+                <NotFoundAddress @item={{item}} @onChange={{this.chooseResolution}} />
+            {{/each}}
+            <button
+                class="route-builder__button mb-2"
+                type="button"
+                disabled={{this.isLoading}}
+                {{on "click" this.continueBuild}}
+            >
+                {{#if this.isLoading}}
+                    Будую маршрут…
+                {{else}}
+                    Продовжити будувати маршрут
+                {{/if}}
+            </button>
+        </div>
+    {{/if}}
+
+    {{#if this.result}}
+        <RouteResult @route={{this.result}} @record={{this.resultRecord}} @onBookmark={{this.bookmarkRoute}} />
+    {{/if}}
+</section>

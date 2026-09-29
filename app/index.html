@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Маршрутер</title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        {{content-for "head"}}
+
+        <link rel="manifest" href="{{rootURL}}manifest.webmanifest" />
+        <meta name="msapplication-config" content="{{rootURL}}browserconfig.xml" />
+
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+            integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+            crossorigin="anonymous"
+        />
+        <link rel="manifest" href="{{rootURL}}manifest.webmanifest" />
+        <meta name="msapplication-config" content="{{rootURL}}browserconfig.xml" />
+
+        <link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css" />
+        <link integrity="" rel="stylesheet" href="{{rootURL}}assets/geo-street-app.css" />
+
+        <script src="{{rootURL}}assets/vendor.js"></script>
+        <script src="{{rootURL}}assets/geo-street-app.js"></script>
+
+        {{content-for "head-footer"}}
+    </head>
+    <body>
+        {{content-for "body"}} {{content-for "body-footer"}}
+    </body>
+</html>

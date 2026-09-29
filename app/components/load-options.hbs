@@ -1,0 +1,18 @@
+{{#if this.isShow}}
+    <BsDropdown as |dd|>
+        <dd.button class="btn-dark d-flex align-items-center">
+            <span class="mr-1">
+                {{this.loadName}}
+            </span>
+
+            <span class="caret ml-2"></span>
+        </dd.button>
+        <dd.menu as |menu|>
+            {{#each this.loadOptions as |op|}}
+                <menu.item>
+                    <a class="dropdown-item" role="button" {{on "click" (fn this.onChange op)}}>{{op.name}}</a>
+                </menu.item>
+            {{/each}}
+        </dd.menu>
+    </BsDropdown>
+{{/if}}

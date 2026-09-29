@@ -1,0 +1,49 @@
+<fieldset class="not-found-address">
+    <legend><strong>{{@item.address}}</strong></legend>
+    {{!-- {{#if @item.reason}}<p role="alert">{{@item.reason}}</p>{{/if}} --}}
+    <label>
+        <input
+            type="radio"
+            name="missing-address-{{@item.index}}"
+            checked={{this.isRename}}
+            {{on "change" this.selectRename}}
+        />
+        Змінити назву вулиці
+    </label>
+    {{#if this.isRename}}
+
+        <div class="not-found-address__change-name">
+            <input type="text" value={{@item.choice.address}} {{on "input" this.changeNameTextBox}} />
+            <button class="not-found-address__change-name-btn" type="button" {{on "click" this.changeName}}>
+                Зберегти
+            </button>
+        </div>
+    {{/if}}
+    <label>
+        <input
+            type="radio"
+            name="missing-address-{{@item.index}}"
+            checked={{this.isLink}}
+            {{on "change" this.selectLink}}
+        />
+        Вказати посилання на точку у Visicom
+    </label>
+    {{#if this.isLink}}
+        <input
+            type="url"
+            aria-label="Посилання Visicom для {{@item.address}}"
+            placeholder="https://maps.visicom.ua/i/VIZCOM_ID?lang=uk"
+            value={{@item.choice.url}}
+            {{on "input" this.changeLink}}
+        />
+    {{/if}}
+    <label>
+        <input
+            type="radio"
+            name="missing-address-{{@item.index}}"
+            checked={{this.isRemove}}
+            {{on "change" this.selectRemove}}
+        />
+        Видалити цю вулицю з маршруту
+    </label>
+</fieldset>

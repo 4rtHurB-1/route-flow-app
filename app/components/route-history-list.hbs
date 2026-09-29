@@ -1,0 +1,44 @@
+<section class="route-history">
+    <header class="route-history__header">
+
+        {{! <h3>Історія маршрутів</h3> }}
+
+        <LinkTo @route="index" class="pb-3 font-weight-bold" style="color: #0d5fc7;">Назад до побудови маршруту</LinkTo>
+        <p class="mb-0">Збережені маршрути й останні 10 маршрутів</p>
+    </header>
+
+    {{#if this.items.length}}
+        <div class="route-history__list">
+            {{#each this.items as |item|}}
+                <article class="route-history__item">
+                    <h2 class="route-history__title">
+                        {{#if item.bookmarked}}★ {{/if}}{{item.displayTitle}}
+                    </h2>
+                    <button
+                        class="route-history__toggle"
+                        type="button"
+                        aria-expanded={{item.isOpen}}
+                        {{on "click" (fn this.toggleRoute item.id)}}
+                    >
+                        {{#if item.isOpen}}
+                            Сховати маршрут
+                        {{else}}
+                            Подивитися маршрут
+                        {{/if}}
+                    </button>
+
+                    {{#if item.isOpen}}
+                        <RouteResult
+                            @route={{item.route}}
+                            @record={{item}}
+                            @onBookmark={{this.bookmarkRoute}}
+                            @onDelete={{this.deleteRoute}}
+                        />
+                    {{/if}}
+                </article>
+            {{/each}}
+        </div>
+    {{else}}
+        <p class="route-history__empty">Історія маршрутів поки порожня</p>
+    {{/if}}
+</section>

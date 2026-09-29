@@ -1,0 +1,365 @@
+.route-builder {
+  width: min(100%, 44rem);
+  margin-inline: auto;
+  color: #172033;
+  margin-bottom: 40px;
+}
+
+.route-builder__form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.route-builder__header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.route-builder__label {
+  font-weight: 700;
+}
+
+.route-builder__textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 12rem;
+  padding: 0.85rem;
+  resize: vertical;
+  border: 1px solid #b8c1d1;
+  border-radius: 0.65rem;
+  font: inherit;
+  line-height: 1.45;
+}
+
+.route-builder__textarea:focus {
+  border-color: #1769e0;
+  outline: 3px solid rgb(23 105 224 / 18%);
+}
+
+.route-builder__button {
+  width: fit-content;
+  padding: 0.7rem 1.1rem;
+  border: 0;
+  border-radius: 0.55rem;
+  background: #1769e0;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.route-builder__button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.route-builder__error {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  border-radius: 0.55rem;
+  background: #fff0f0;
+  color: #9c1c1c;
+}
+
+.route-builder__history-link {
+  width: fit-content;
+  color: #0d5fc7;
+  font-weight: 700;
+}
+
+.route-result {
+  margin-top: 1.5rem;
+}
+
+.route-result__summary {
+  margin-bottom: 1rem;
+}
+
+.route-result__part + .route-result__part {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #dce1e9;
+}
+
+.route-result__stops {
+  display: grid;
+  gap: 0.7rem;
+  padding-left: 0.5rem;
+}
+
+.route-result__stop a {
+  color: #172033;
+  font-weight: 700;
+}
+
+.route-result__stop {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 0.45rem;
+  row-gap: 0;
+}
+
+.route-result__stop-address {
+  margin-right: 0.15rem;
+}
+
+.route-result__stop .route-result__phone,
+.route-result__blacklist-icon {
+  display: inline-grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 50%;
+  background: #e8f4ec;
+  color: #15713b;
+}
+
+.route-result__blacklist-icon {
+  background: #fde9e9;
+  color: #b42318;
+}
+
+.route-result__phone svg,
+.route-result__blacklist-icon svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: currentcolor;
+}
+
+.route-result__blacklist-reason {
+  margin: 0;
+  color: #9c1c1c;
+  line-height: 1.4;
+}
+
+.route-result__info-icon, .route-result__info-reason {
+  color: orange !important;
+}
+.route-result__info-icon {
+  background: rgb(251, 234, 201) !important;
+}
+
+.route-result__phone:focus-visible {
+  outline: 3px solid rgb(21 113 59 / 25%);
+  outline-offset: 2px;
+}
+
+.route-result__maps-links {
+  display: flex;
+  flex-direction: column;
+}
+
+.route-result__maps-link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: #0d5fc7;
+  font-weight: 700;
+}
+
+.route-result__actions {
+  display: flex;
+  justify-items: start;
+  justify-content: space-between;
+  gap: 0.7rem;
+  margin-top: 0.75rem;
+  border-top: 1px solid #dce1e9;
+  padding-top: 0.75rem;
+}
+
+.route-result__actions button,
+.route-history__toggle {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #0d5fc7;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.route-result__bookmark-form {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.route-result__bookmark-form input,
+.not-found-address input[type="text"],
+.not-found-address input[type="url"] {
+  box-sizing: border-box;
+  width: min(100%, 35rem);
+  padding: 0.55rem;
+  border: 1px solid #b8c1d1;
+  border-radius: 0.4rem;
+  font: inherit;
+}
+
+.not-found-address__change-name {
+    display: flex;
+    justify-content: space-between;
+    justify-items: center;
+    align-items: center;
+}
+
+.not-found-address__change-name-btn {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #0d5fc7;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: right;
+    margin-left: 10px;
+}
+
+
+.route-result__actions .route-result__delete {
+  color: #9c1c1c;
+}
+
+.route-builder__missing {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.not-found-address {
+  display: grid;
+  gap: 0.65rem;
+  border: 1px solid #dce1e9;
+  border-radius: 0.6rem;
+  padding: 1rem;
+}
+
+.not-found-address label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.route-history {
+  width: min(100%, 52rem);
+  margin-inline: auto;
+  color: #172033;
+}
+
+.route-history__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.route-history__header h1,
+.route-history__header p,
+.route-history__title {
+  margin-top: 0;
+}
+
+.route-history__list {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 40px;
+}
+
+.route-history__item {
+  padding: 1rem;
+  border: 1px solid #dce1e9;
+  border-radius: 0.7rem;
+  background: #fff;
+}
+
+.route-history__title {
+  margin-bottom: 0.65rem;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.route-history__toggle {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #0d5fc7;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.route-history__item .route-result {
+  padding-top: 0.25rem;
+}
+
+@media (max-width: 40rem) {
+  .route-history__header {
+    flex-direction: column;
+  }
+}
+
+.route-result__warning {
+  padding: 0.75rem;
+  border-radius: 0.55rem;
+  background: #fff8df;
+  color: #6d5200;
+}
+
+.route-settings {
+  width: min(100%, 44rem);
+  margin-inline: auto;
+  color: #172033;
+}
+
+.route-settings__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.route-settings__header a {
+  color: #0d5fc7;
+  font-weight: 700;
+}
+
+.route-settings__form {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.route-settings__form label {
+  margin-top: 0.8rem;
+  font-weight: 700;
+}
+
+.route-settings__form input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #b8c1d1;
+  border-radius: 0.55rem;
+  font: inherit;
+}
+
+.route-settings__form p {
+  margin: 0;
+}
+
+.route-settings__form .route-builder__button {
+  margin-top: 0.85rem;
+}
+
+.route-settings__saved {
+  color: #15713b;
+}
+
+@media (max-width: 40rem) {
+  .route-history__header {
+    flex-direction: column;
+  }
+
+  .route-settings__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,259 @@
+@import "./route-builder.css";
+
+.container {
+  padding-top: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-header {
+  display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.navbar-header__settings {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+}
+
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+  margin-right: 0;
+}
+
+.copping-btn {
+  background: #6c757d !important;
+}
+
+.copy-btn {
+  border-bottom-right-radius: .25rem !important;
+  border-top-right-radius: .25rem !important;
+}
+
+.save-btn {
+  width: 100%;
+}
+
+@media (min-width: 992px) {
+  .navbar-collapse {
+    justify-content: flex-end;
+  }
+
+  .navbar-collapse {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 992px) {
+  .navbar-collapse {
+    margin-top: 10px;
+  }
+
+  .navbar-nav * {
+     text-align: right;
+  }
+}
+
+.ember-power-select-trigger {
+  line-height: 2.5;
+}
+
+.ember-power-select-placeholder {
+  line-height: 2.2;
+  color: #343a40;
+}
+
+.page {
+  width: min(calc(100vw - 30px), 500px);
+}
+
+body {
+  font-family: Roboto,system-ui,BlinkMacSystemFont,"-apple-system","Segoe UI",Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif
+}
+
+/* Scanner */
+
+#video-container {
+  line-height: 0;
+  width: 90vw;
+}
+
+#qr-video {
+  width: 90vw;
+}
+
+.modal {
+  top: unset !important;
+}
+
+.modal-content {
+  border-radius: 10px;
+  padding-bottom: 10px !important;
+  border: none !important;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.modal-footer {
+  border-top: none !important;
+  flex-direction: column;
+}
+
+.qr-res-text {
+  width: 100%;
+  padding-left: 3px;
+}
+
+.not-found-pub-header {
+  display: flex;
+    align-items: center;
+    column-gap: 10px;
+    color: #dc3545;
+}
+
+.found-pub-header {
+  display: flex;
+  flex-direction: column;
+  color: #198754;
+}
+
+.found-pub-text {
+  display: flex;
+    align-items: center;
+    column-gap: 10px;
+}
+
+.found-header-text {
+  margin-bottom: unset !important;
+}
+
+.modal-dialog {
+  bottom: 0 !important;
+  position: absolute !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.modal-header .close {
+  display: none;
+}
+
+.sm-cnt-text {
+  padding: .375rem .35rem;
+}
+
+.index-text {
+  padding: .375rem .55rem;
+  font-size: 14px;
+}
+
+.route-builder, .route-history, .route-settings {
+  width: min(100%, 44rem);
+  margin-inline: auto;
+  color: #172033;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  margin-bottom: 40px
+}
+
+.route-builder__form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.route-builder__label {
+  font-weight: 700;
+}
+
+.route-builder__textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 12rem;
+  padding: 0.85rem;
+  resize: vertical;
+  border: 1px solid #b8c1d1;
+  border-radius: 0.65rem;
+  font: inherit;
+  line-height: 1.45;
+}
+
+.route-builder__textarea:focus {
+  border-color: #1769e0;
+  outline: 3px solid rgb(23 105 224 / 18%);
+}
+
+.route-builder__button {
+  width: 100%;
+  padding: 0.7rem 1.1rem;
+  border: 0;
+  border-radius: 0.55rem;
+  background: #1769e0;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.route-builder__button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.route-builder__error {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  border-radius: 0.55rem;
+  background: #fff0f0;
+  color: #9c1c1c;
+}
+
+.route-builder__result {
+  margin-top: 1.5rem;
+}
+
+.route-builder__summary {
+  margin-bottom: 1rem;
+}
+
+.route-builder__part + .route-builder__part {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #dce1e9;
+}
+
+.route-builder__stops {
+  display: grid;
+  gap: 0.7rem;
+  padding-left: 1.5rem;
+}
+
+.route-builder__stop code {
+  white-space: nowrap;
+}
+
+.route-builder__link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: #0d5fc7;
+  font-weight: 700;
+}

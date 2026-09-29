@@ -1,0 +1,124 @@
+<div class="route-result">
+    {{#if this.distanceText}}
+        <p class="route-result__summary">
+            Відстань:
+            <strong>{{this.distanceText}}</strong>
+            {{#if this.durationText}}
+                · Час:
+                <strong>{{this.durationText}}</strong>
+            {{/if}}
+        </p>
+    {{/if}}
+
+    {{#if @route.phoneLookupWarning}}
+        <p class="route-result__warning" role="status">
+            Маршрут побудовано, але телефони не завантажено:
+            {{@route.phoneLookupWarning}}
+        </p>
+    {{/if}}
+
+    {{#each this.routeParts as |part|}}
+        <div class="route-result__part">
+            <ol class="route-result__stops">
+                {{#each part.stops as |stop index|}}
+                    <li class="route-result__stop">
+                        <span class="route-result__stop-address">
+                            {{#if stop.visicomUrl}}
+                                <a href={{stop.visicomUrl}} target="_blank" rel="noopener noreferrer">{{add index 1}}.
+                                    {{stop.address}}</a>
+                            {{else}}
+                                <strong>{{add index 1}}. {{stop.address}}</strong>
+                            {{/if}}
+                        </span>
+                        {{#if stop.phone}}
+                            <a
+                                class="route-result__phone"
+                                href={{stop.phone.href}}
+                                aria-label={{concat "Зателефонувати " stop.phone.number}}
+                                title={{stop.phone.number}}
+                            >
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path
+                                        d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24c1.1.36 2.3.54 3.6.54a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.18 2.45.54 3.57a1 1 0 0 1-.25 1.02L6.6 10.8Z"
+                                    />
+                                </svg>
+                            </a>
+                        {{/if}}
+                        {{#if stop.blacklisted}}
+                            <span
+                                class="{{if (is-reason-info stop.blacklistReason) 'route-result__info-icon'}}
+                                    route-result__blacklist-icon"
+                                role="img"
+                                aria-label="Адреса в чорному списку"
+                                title="Адреса в чорному списку"
+                            >
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 2 1 21h22L12 2Zm1 16h-2v-2h2v2Zm0-4h-2V9h2v5Z" />
+                                </svg>
+                            </span>
+
+                            {{#if stop.blacklistReason}}
+                                <p
+                                    class="{{if (is-reason-info stop.blacklistReason) 'route-result__info-reason'}}
+                                        route-result__blacklist-reason"
+                                >
+                                    {{stop.blacklistReason}}
+                                </p>
+                            {{/if}}
+                        {{/if}}
+                    </li>
+                {{/each}}
+            </ol>
+
+            <div class="route-result__maps-links">
+                <a
+                    class="route-result__maps-link"
+                    href={{part.appleMapsUrl}}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >Відкрити в Apple Maps</a>
+
+                <a
+                    class="route-result__maps-link"
+                    href={{part.googleMapsUrl}}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >Відкрити у Google Maps</a>
+            </div>
+        </div>
+    {{/each}}
+
+    {{#if @record}}
+        <div class="route-result__actions">
+            {{#if @record.bookmarked}}
+                <span>★ Збережено</span>
+            {{else}}
+                {{#if this.isNaming}}
+                    <form class="route-result__bookmark-form" {{on "submit" this.saveBookmark}}>
+                        <label for="bookmark-name-{{@record.id}}">Назва маршруту</label>
+                        <input
+                            id="bookmark-name-{{@record.id}}"
+                            type="text"
+                            value={{this.bookmarkName}}
+                            required
+                            {{on "input" this.updateBookmarkName}}
+                        />
+                        <button type="submit">Зберегти</button>
+                    </form>
+                {{else}}
+                    <button type="button" {{on "click" this.openNaming}}>
+                        Зберегти маршрут
+                    </button>
+                {{/if}}
+            {{/if}}
+            {{#unless this.isNaming}}
+                {{#if @onDelete}}
+                    <button type="button" class="route-result__delete" {{on "click" this.deleteRoute}}>
+                        Видалити маршрут
+                    </button>
+                {{/if}}
+            {{/unless}}
+            {{#if this.actionError}}<p role="alert">{{this.actionError}}</p>{{/if}}
+        </div>
+    {{/if}}
+</div>

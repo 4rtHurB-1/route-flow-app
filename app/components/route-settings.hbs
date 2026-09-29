@@ -1,0 +1,29 @@
+<section class="route-settings">
+  <header class="route-settings__header">
+    <LinkTo @route="index">До побудови маршруту</LinkTo>
+  </header>
+
+  <form class="route-settings__form" {{on "submit" this.save}}>
+    <label for="route-settings-spreadsheet">Посилання на Google Таблицю з даними</label>
+    <input
+      id="route-settings-spreadsheet"
+      type="url"
+      value={{this.spreadsheetUrl}}
+      placeholder="https://docs.google.com/spreadsheets/d/ID/edit"
+      {{on "input" this.updateSpreadsheetUrl}}
+    />
+
+    <label for="route-settings-visicom">Ключ Visicom</label>
+    <input
+      id="route-settings-visicom"
+      type="text"
+      value={{this.visicomApiKey}}
+      autocomplete="off"
+      {{on "input" this.updateVisicomApiKey}}
+    />
+
+    <button class="route-builder__button" type="submit">Зберегти налаштування</button>
+    {{#if this.errorMessage}}<p class="route-builder__error" role="alert">{{this.errorMessage}}</p>{{/if}}
+    {{#if this.saved}}<p class="route-settings__saved" role="status">Налаштування збережено.</p>{{/if}}
+  </form>
+</section>

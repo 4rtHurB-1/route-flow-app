@@ -1,0 +1,28 @@
+<BsNavbar @type="light" @backgroundColor="light" @collapsed={{true}} as |navbar|>
+    <div class="navbar-header">
+        <div class="navbar-header__settings">
+            <div
+                class="navbar-brand"
+                role="button"
+                {{on "touchstart" this.startPress}}
+                {{on "touchend" this.endPress}}
+                {{on "touchcancel" this.endPress}}
+                {{on "mousedown" this.startPress}}
+                {{on "mouseup" this.endPress}}
+                {{on "mouseleave" this.endPress}}
+            >
+                <img src="/assets/icons/site-logo.png" width="40" height="40" class="d-inline-block align-top" alt="" />
+                <span>
+                    {{#if @label}}
+                        {{@label}}
+                    {{else}}
+                        {{t "site.name"}}
+                    {{/if}}
+                </span>
+                <BsTooltip @placement="right" @visible={{this.isShowVersion}}>ver. 1.9</BsTooltip>
+            </div>
+        </div>
+
+        <LoadOptions />
+    </div>
+</BsNavbar>
