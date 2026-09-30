@@ -613,7 +613,7 @@ function attachPhones(points, results) {
 
 function appleMapsUrl(points) {
     const url = new URL('https://maps.apple.com/directions');
-    url.searchParams.set('source', coordinateText(points[0]));
+    //url.searchParams.set('source', coordinateText(points[0]));
     url.searchParams.set('destination', coordinateText(points.at(-1)));
     for (const waypoint of points.slice(1, -1)) {
         url.searchParams.append('waypoint', coordinateText(waypoint));
