@@ -1,5 +1,7 @@
 import Service, { inject as service } from '@ember/service';
 
+import { configuredCoordinate, correctStreetName } from '../utils/address-lookup-config';
+
 const GOOGLE_ROUTES_URL = 'https://routes.googleapis.com/directions/v2:computeRoutes';
 const GOOGLE_MAPS_API_KEY = 'AIzaSyAQnddZ7O-hoZay6MKFu57o66N_2C0L76E';
 
@@ -83,7 +85,9 @@ export default class RouteOptimizerService extends Service {
                 {
                     index,
                     address,
-                    queryAddress: choice?.type === 'rename' ? address : getCorrection(corrections, address) ?? address,
+                    queryAddress: correctStreetName(
+                        choice?.type === 'rename' ? address : getCorrection(corrections, address) ?? address
+                    ),
                     linkUrl: choice?.type === 'link' ? choice.url : null,
                 },
             ];
@@ -98,6 +102,18 @@ export default class RouteOptimizerService extends Service {
         const knownPoints = new Map(resolvedPoints.map(({ index, point }) => [index, point]));
         const pointsByIndex = new Map();
         const unprocessed = entries.filter((entry) => {
+            const coordinate = configuredCoordinate(entry.address) ?? configuredCoordinate(entry.queryAddress);
+            if (coordinate) {
+                pointsByIndex.set(entry.index, {
+                    index: entry.index,
+                    address: entry.address,
+                    queryAddress: entry.queryAddress,
+                    coordinate,
+                    vizcomId: null,
+                    coordinateSource: 'config',
+                });
+                return false;
+            }
             const point = knownPoints.get(entry.index);
             if (
                 point &&
@@ -500,7 +516,7 @@ function findOutliers(stops) {
     );
     const thresholdKm = Math.max(OUTLIER_MIN_NEAREST_KM, median(nearestDistances) * OUTLIER_MULTIPLIER);
     return stops.flatMap((stop, index) =>
-        nearestDistances[index] > thresholdKm
+        stop.coordinateSource !== 'config' && nearestDistances[index] > thresholdKm
             ? [
                   {
                       address: stop.address,

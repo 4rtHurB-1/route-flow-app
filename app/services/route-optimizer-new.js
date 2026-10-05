@@ -1,5 +1,6 @@
 import Service, { inject as service } from '@ember/service';
 import { DEFAULT_ORIGIN } from './current-location';
+import { configuredCoordinate, correctStreetName } from '../utils/address-lookup-config';
 
 const GOOGLE_ROUTES_URL =
   'https://routes.googleapis.com/directions/v2:computeRoutes';
@@ -90,9 +91,11 @@ export default class RouteOptimizerService extends Service {
       return [{
         index,
         address,
-        queryAddress: choice?.type === 'rename'
-          ? address
-          : getCorrection(corrections, address) ?? address,
+        queryAddress: correctStreetName(
+          choice?.type === 'rename'
+            ? address
+            : getCorrection(corrections, address) ?? address,
+        ),
         linkUrl: choice?.type === 'link' ? choice.url : null,
       }];
     });
@@ -106,6 +109,19 @@ export default class RouteOptimizerService extends Service {
     const knownPoints = new Map(resolvedPoints.map(({ index, point }) => [index, point]));
     const pointsByIndex = new Map();
     const unprocessed = entries.filter((entry) => {
+      const coordinate = configuredCoordinate(entry.address) ??
+        configuredCoordinate(entry.queryAddress);
+      if (coordinate) {
+        pointsByIndex.set(entry.index, {
+          index: entry.index,
+          address: entry.address,
+          queryAddress: entry.queryAddress,
+          coordinate,
+          vizcomId: null,
+          coordinateSource: 'config',
+        });
+        return false;
+      }
       const point = knownPoints.get(entry.index);
       if (point && point.address === entry.address &&
         point.queryAddress === entry.queryAddress &&
@@ -605,7 +621,7 @@ function findOutliers(stops) {
     median(nearestDistances) * OUTLIER_MULTIPLIER,
   );
   return stops.flatMap((stop, index) =>
-    nearestDistances[index] > thresholdKm
+    stop.coordinateSource !== 'config' && nearestDistances[index] > thresholdKm
       ? [
           {
             address: stop.address,
@@ -668,7 +684,7 @@ function mapsUrl(points) {
 
 function appleMapsUrl(points) {
   const url = new URL('https://maps.apple.com/directions');
-  //url.searchParams.set('source', coordinateText(points[0]));
+  url.searchParams.set('source', coordinateText(points[0]));
   url.searchParams.set('destination', coordinateText(points.at(-1)));
   for (const waypoint of points.slice(1, -1)) {
     url.searchParams.append('waypoint', coordinateText(waypoint));
