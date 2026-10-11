@@ -1,5 +1,5 @@
 import { helper } from '@ember/component/helper';
 
 export default helper(function isLast([reason]) {
-    return ['Пенсія', 'Газети', "Газети; Пенсія"].includes(reason);
+    return /пенсія|газета|газети/i.test(reason);
 });
