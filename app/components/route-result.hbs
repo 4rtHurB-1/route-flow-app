@@ -45,26 +45,100 @@
                             </a>
                         {{/if}}
                         {{#if stop.blacklisted}}
-                            <span
-                                class="{{if (is-reason-info stop.blacklistReason) 'route-result__info-icon'}}
-                                    route-result__blacklist-icon"
-                                role="img"
-                                aria-label="Адреса в чорному списку"
-                                title="Адреса в чорному списку"
-                            >
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M12 2 1 21h22L12 2Zm1 16h-2v-2h2v2Zm0-4h-2V9h2v5Z" />
-                                </svg>
-                            </span>
+                            {{#let (address-details stop.blacklistReason) as |details|}}
+                                {{#if details.isPension}}
+                                    <span
+                                        class="address-details__icon address-details__icon-pension"
+                                        role="img"
+                                        aria-label="Адреса в чорному списку"
+                                        title="Адреса в чорному списку"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 640 640"
+                                        ><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path
+                                                d="M128 128C92.7 128 64 156.7 64 192L64 448C64 483.3 92.7 512 128 512L512 512C547.3 512 576 483.3 576 448L576 192C576 156.7 547.3 128 512 128L128 128zM360 352L488 352C501.3 352 512 362.7 512 376C512 389.3 501.3 400 488 400L360 400C346.7 400 336 389.3 336 376C336 362.7 346.7 352 360 352zM336 264C336 250.7 346.7 240 360 240L488 240C501.3 240 512 250.7 512 264C512 277.3 501.3 288 488 288L360 288C346.7 288 336 277.3 336 264zM212 208C223 208 232 217 232 228L232 232L240 232C251 232 260 241 260 252C260 263 251 272 240 272L192.5 272C185.6 272 180 277.6 180 284.5C180 290.6 184.4 295.8 190.4 296.8L232.1 303.8C257.4 308 276 329.9 276 355.6C276 381.7 257 403.3 232 407.4L232 412.1C232 423.1 223 432.1 212 432.1C201 432.1 192 423.1 192 412.1L192 408.1L168 408.1C157 408.1 148 399.1 148 388.1C148 377.1 157 368.1 168 368.1L223.5 368.1C230.4 368.1 236 362.5 236 355.6C236 349.5 231.6 344.3 225.6 343.3L183.9 336.3C158.5 332 140 310.1 140 284.5C140 255.7 163.2 232.3 192 232L192 228C192 217 201 208 212 208z"
+                                            /></svg>
+                                        {{details.pensionDay}}
+                                    </span>
+                                {{/if}}
+                                {{#if details.hasMagazine}}
+                                    <span
+                                        class="address-details__icon address-details__icon-magazine"
+                                        role="img"
+                                        aria-label="Адреса в чорному списку"
+                                        title="Адреса в чорному списку"
+                                    >
+                                        <svg
+                                            version="1.0"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="728.000000pt"
+                                            height="734.000000pt"
+                                            viewBox="0 0 728.000000 734.000000"
+                                            preserveAspectRatio="xMidYMid meet"
+                                        >
 
-                            {{#if stop.blacklistReason}}
-                                <p
-                                    class="{{if (is-reason-info stop.blacklistReason) 'route-result__info-reason'}}
-                                        route-result__blacklist-reason"
-                                >
-                                    {{stop.blacklistReason}}
-                                </p>
-                            {{/if}}
+                                            <g
+                                                transform="translate(0.000000,734.000000) scale(0.100000,-0.100000)"
+                                                fill="currentColor"
+                                                stroke="none"
+                                            >
+                                                <path
+                                                    d="M1825 6256 c-84 -21 -147 -57 -211 -121 -68 -67 -106 -139 -123 -230
+-9 -44 -11 -533 -9 -1802 l3 -1741 63 38 c204 123 490 133 699 26 38 -20 83
+-45 101 -57 l32 -21 0 1756 c0 1252 -3 1770 -11 1808 -18 86 -58 158 -123 224
+-114 113 -270 158 -421 120z"
+                                                />
+                                                <path
+                                                    d="M2635 6053 c33 -84 34 -136 35 -2220 l0 -2053 1535 0 c1519 0 1536 0
+1575 20 26 13 47 34 60 60 20 39 20 54 20 2065 0 2011 0 2026 -20 2065 -13 26
+-34 47 -60 60 -39 20 -55 20 -1596 20 -1478 0 -1556 -1 -1549 -17z m2695 -601
+c19 -9 45 -32 57 -51 l23 -34 0 -797 0 -797 -23 -34 c-49 -74 32 -69 -1154
+-67 l-1062 3 -28 21 c-15 12 -37 36 -48 55 -19 33 -20 55 -23 774 -2 407 0
+763 3 792 8 63 38 112 85 135 33 17 105 18 1085 18 980 0 1052 -1 1085 -18z
+m0 -2100 c50 -25 80 -75 80 -132 0 -57 -30 -107 -80 -132 -33 -17 -105 -18
+-1085 -18 -1171 0 -1093 -5 -1142 69 -48 71 -20 175 57 213 33 17 105 18 1085
+18 980 0 1052 -1 1085 -18z m0 -600 c50 -25 80 -75 80 -132 0 -57 -30 -107
+-80 -132 -33 -17 -105 -18 -1085 -18 -1171 0 -1093 -5 -1142 69 -48 71 -20
+175 57 213 33 17 105 18 1085 18 980 0 1052 -1 1085 -18z"
+                                                />
+                                                <path
+                                                    d="M3370 4570 l0 -600 870 0 870 0 0 600 0 600 -870 0 -870 0 0 -600z"
+                                                />
+                                                <path
+                                                    d="M1783 2180 c-126 -41 -239 -157 -282 -288 -25 -74 -26 -131 -6 -227
+38 -184 176 -361 345 -444 154 -75 44 -71 1788 -71 1547 0 1563 0 1602 20 62
+32 80 77 80 205 l0 105 -1411 0 c-1562 0 -1453 -5 -1502 64 -19 27 -23 49 -28
+166 -4 74 -14 156 -22 182 -36 113 -121 209 -236 266 -67 33 -82 37 -170 39
+-75 2 -110 -1 -158 -17z"
+                                                />
+                                            </g>
+                                        </svg>
+                                    </span>
+                                {{/if}}
+                                {{#if details.pensionNote}}
+                                    <p class="address-details address-details__pension">
+                                        {{details.pensionNote}}
+                                    </p>
+                                {{/if}}
+                                {{#if details.isBlacklist}}
+                                    <span
+                                        class="address-details__icon address-details__icon-blacklist"
+                                        role="img"
+                                        aria-label="Адреса в чорному списку"
+                                        title="Адреса в чорному списку"
+                                    >
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M12 2 1 21h22L12 2Zm1 16h-2v-2h2v2Zm0-4h-2V9h2v5Z" />
+                                        </svg>
+                                    </span>
+                                    {{#if details.blacklistNote}}
+                                        <p class="address-details address-details__blacklist">
+                                            {{details.blacklistNote}}
+                                        </p>
+                                    {{/if}}
+                                {{/if}}
+                            {{/let}}
                         {{/if}}
                     </li>
                 {{/each}}

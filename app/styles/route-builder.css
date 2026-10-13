@@ -101,18 +101,34 @@
 }
 
 .route-result__stop-address {
-  margin-right: 0.15rem;
+  /* margin-right: 0.15rem; */
+  margin-right: 0.45rem;
+    display: inline;
+    vertical-align: text-bottom;
 }
-
-.route-result__stop .route-result__phone,
-.route-result__blacklist-icon {
-  display: inline-grid;
+.route-result__stop .route-result__phone {
+display: inline-grid;
   width: 2rem;
   height: 2rem;
   place-items: center;
   border-radius: 50%;
+  padding: 0px 4px;
   background: #e8f4ec;
+  font-size: 12px;
   color: #15713b;
+}
+
+.route-result__blacklist-icon {
+  display: flex;
+    width: 2.5rem;
+    height: 2rem;
+    place-items: center;
+    border-radius: 30%;
+    padding: 0px 4px;
+    background: #e8f4ec;
+    color: #15713b;
+    font-size: 12px;
+        justify-content: center;
 }
 
 .route-result__blacklist-icon {
@@ -121,16 +137,88 @@
 }
 
 .route-result__phone svg,
-.route-result__blacklist-icon svg {
-  width: 1.1rem;
+.address-details__icon svg {
   height: 1.1rem;
   fill: currentcolor;
+}
+
+.route-result__details-reason {
+ margin: 0;
+  color: #9c1c1c;
+  line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: break-word;
+    display: inline;
+    vertical-align: text-bottom;
+}
+
+.address-details {
+   margin: 0;
+   line-height: 1.4;
+   white-space: normal;
+   overflow-wrap: break-word;
+   display: inline;
+   vertical-align: text-bottom;
+   margin-bottom: 0;
+}
+
+.address-details__icon {
+  display: flex;
+    width: 2rem;
+    height: 2rem;
+    place-items: center;
+    border-radius: 100%;
+}
+
+.address-details__pension {
+  color: #3F51B5 !important;
+}
+
+.address-details__icon-pension {
+  background: #3f51b526 !important;
+  color: #3F51B5 !important;
+   display: flex;
+    width: 2.5rem;
+    height: 2rem;
+    place-items: center;
+    border-radius: 30%;
+    padding: 0px 4px;
+    font-size: 13px;
+}
+
+.address-details__blacklist {
+  color: #9c1c1c;
+}
+
+.address-details__icon-blacklist {
+  background: #fde9e9 !important;
+  color: #9c1c1c;
+}
+
+.address-details__icon-blacklist svg {
+  padding-left: 7px;
+}
+
+.address-details__magazine {
+  color: orange !important;
+}
+
+.address-details__icon-magazine {
+  background: rgb(251, 234, 201) !important;
+  color: orange !important;
+}
+.address-details__icon-magazine svg {
+  height: 1.5rem;
 }
 
 .route-result__blacklist-reason {
   margin: 0;
   color: #9c1c1c;
   line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: break-word;
+    display: inline;
+    vertical-align: text-bottom;
 }
 
 .route-result__info-icon, .route-result__info-reason {
