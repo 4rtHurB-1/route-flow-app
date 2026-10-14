@@ -14,18 +14,32 @@
                     <h2 class="route-history__title">
                         {{#if item.bookmarked}}★ {{/if}}{{item.displayTitle}}
                     </h2>
-                    <button
-                        class="route-history__toggle"
-                        type="button"
-                        aria-expanded={{item.isOpen}}
-                        {{on "click" (fn this.toggleRoute item.id)}}
-                    >
+                    <div class="route-history__toggle {{if item.isOpen 'route-history__toggle--open'}}">
                         {{#if item.isOpen}}
-                            Сховати маршрут
+                            <div class="route-history__toggle-btn">
+                                <a role="button" {{on "click" (fn this.toggleRoute item.id)}}>Сховати маршрут</a>
+                                <a role="button" {{on "click" (fn this.copyAddressTextToClipboard item)}}>Скопіювати
+                                    <span>
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            fill="currentColor"
+                                            class="bi bi-copy"
+                                            viewBox="0 0 16 16"
+                                        >
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"
+                                            />
+                                        </svg>
+                                    </span></a>
+                            </div>
+
                         {{else}}
-                            Подивитися маршрут
+                            <a role="button" {{on "click" (fn this.toggleRoute item.id)}}>Подивитися маршрут</a>
                         {{/if}}
-                    </button>
+                    </div>
 
                     {{#if item.isOpen}}
                         <RouteResult

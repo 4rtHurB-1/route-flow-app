@@ -4,30 +4,45 @@ import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
 export default class RouteHistoryListComponent extends Component {
-  @service('route-history') routeHistory;
-  @tracked openRouteId = null;
+    @service('route-history') routeHistory;
+    @tracked openRouteId = null;
 
-  get items() {
-    return this.routeHistory.routes.map((item) => ({
-      ...item,
-      displayTitle: item.bookmarked ? item.name : item.title,
-      isOpen: item.id === this.openRouteId,
-    }));
-  }
+    get items() {
+        return this.routeHistory.routes.map((item) => ({
+            ...item,
+            displayTitle: item.bookmarked ? item.name : item.title,
+            isOpen: item.id === this.openRouteId,
+        }));
+    }
 
-  @action
-  toggleRoute(id) {
-    this.openRouteId = this.openRouteId === id ? null : id;
-  }
+    @action
+    toggleRoute(id) {
+        this.openRouteId = this.openRouteId === id ? null : id;
+    }
 
-  @action
-  bookmarkRoute(id, name) {
-    this.routeHistory.bookmarkRoute(id, name);
-  }
+    @action
+    bookmarkRoute(id, name) {
+        this.routeHistory.bookmarkRoute(id, name);
+    }
 
-  @action
-  deleteRoute(id) {
-    this.routeHistory.deleteRoute(id);
-    if (this.openRouteId === id) this.openRouteId = null;
-  }
+    @action
+    deleteRoute(id) {
+        this.routeHistory.deleteRoute(id);
+        if (this.openRouteId === id) this.openRouteId = null;
+    }
+
+    copyAddressTextToClipboard = (item) => {
+        let addressTexts = '';
+        for (const stop of item?.route?.orderedStops) {
+            if (stop.index) {
+                addressTexts += `${stop.address}\n`;
+            }
+        }
+
+        try {
+            navigator.clipboard.writeText(addressTexts);
+        } catch (error) {
+            console.or('Помилка копіювання:', error);
+        }
+    };
 }

@@ -266,6 +266,16 @@ display: inline-grid;
   cursor: pointer;
 }
 
+.route-history__toggle--open {
+  width: 100%;
+}
+
+.route-history__toggle-btn {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .route-result__bookmark-form {
   display: grid;
   gap: 0.5rem;
