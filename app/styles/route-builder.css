@@ -175,7 +175,7 @@ display: inline-grid;
 }
 
 .address-details__icon-pension {
-  background: #3f51b526 !important;
+  background: rgb(63 81 181 / 15%) !important;
   color: #3F51B5 !important;
    display: flex;
     width: 2.5rem;
