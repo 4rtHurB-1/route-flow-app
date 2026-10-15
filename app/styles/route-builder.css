@@ -184,6 +184,7 @@ display: inline-grid;
     border-radius: 30%;
     padding: 0px 4px;
     font-size: 13px;
+    justify-content: center;
 }
 
 .address-details__blacklist {
