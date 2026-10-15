@@ -53,6 +53,22 @@ export default class RouteHistoryService extends Service {
     return record;
   }
 
+  updateRoute(id, route) {
+    const existing = this.routes.find((item) => item.id === id);
+    if (!existing) throw new Error('Маршрут більше не доступний в історії.');
+    const inputAddresses = [...route.inputAddresses];
+    const titleAddresses = (route.orderedStops ?? []).slice(1).map((stop) => stop.address);
+    const updated = {
+      ...existing,
+      inputAddresses,
+      title: (titleAddresses.length ? titleAddresses : inputAddresses).slice(0, 4).join(', '),
+      route,
+      updatedAt: new Date().toISOString(),
+    };
+    this.persist(this.routes.map((item) => item.id === id ? updated : item));
+    return updated;
+  }
+
   bookmarkRoute(id, name) {
     const trimmedName = String(name ?? '').trim();
     if (!trimmedName) throw new Error('Введіть назву маршруту.');

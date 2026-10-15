@@ -128,7 +128,7 @@ export default class RouteOptimizerService extends Service {
             return true;
         });
         const toGeocode = unprocessed.filter((entry) => !entry.linkUrl);
-        const geocoded = toGeocode.length ? await this.#geocodeEntries(toGeocode) : { points: [], missingEntries: [] };
+        const geocoded = toGeocode.length ? await this.#geocodeEntries(toGeocode, visicomApiKey) : { points: [], missingEntries: [] };
         for (const point of geocoded.points) pointsByIndex.set(point.index, point);
         let missingEntries = [...geocoded.missingEntries];
         for (const entry of unprocessed.filter((item) => item.linkUrl)) {
@@ -164,7 +164,7 @@ export default class RouteOptimizerService extends Service {
                     else appliedCorrections.push(correction);
                 }
                 const repairedEntries = entries.filter((entry) => repaired.some((item) => item.index === entry.index));
-                const refreshed = await this.#geocodeEntries(repairedEntries);
+                const refreshed = await this.#geocodeEntries(repairedEntries, visicomApiKey);
                 for (const point of refreshed.points) pointsByIndex.set(point.index, point);
                 missingEntries = missingEntries.filter((entry) => !repaired.some((item) => item.index === entry.index));
                 missingEntries.push(...refreshed.missingEntries);
@@ -291,7 +291,7 @@ export default class RouteOptimizerService extends Service {
         };
     }
 
-    async #repairSuspects({ entries, points, missingEntries, outliers, addressRepairer }) {
+    async #repairSuspects({ entries, points, missingEntries, outliers, addressRepairer, visicomApiKey }) {
         if (typeof addressRepairer !== 'function') return [];
 
         const outlierAddresses = new Set(outliers.map((point) => point.address));
@@ -315,7 +315,7 @@ export default class RouteOptimizerService extends Service {
 
             for (const candidate of uniqueCandidates) {
                 const testEntry = { address: entry.address, queryAddress: candidate };
-                const testResult = await this.#geocodeEntries([testEntry]);
+                const testResult = await this.#geocodeEntries([testEntry], visicomApiKey);
                 const candidatePoint = testResult.points[0];
                 if (!candidatePoint) continue;
 

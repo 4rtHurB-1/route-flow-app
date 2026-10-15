@@ -6,6 +6,7 @@ import { tracked } from '@glimmer/tracking';
 export default class RouteHistoryListComponent extends Component {
     @service('route-history') routeHistory;
     @tracked openRouteId = null;
+    @tracked isEditRoute = false;
 
     get items() {
         return this.routeHistory.routes.map((item) => ({
@@ -31,18 +32,11 @@ export default class RouteHistoryListComponent extends Component {
         if (this.openRouteId === id) this.openRouteId = null;
     }
 
-    copyAddressTextToClipboard = (item) => {
-        let addressTexts = '';
-        for (const stop of item?.route?.orderedStops) {
-            if (stop.index) {
-                addressTexts += `${stop.address}\n`;
-            }
-        }
+    startEditRoute = () => {
+        this.isEditRoute = true;
+    }
 
-        try {
-            navigator.clipboard.writeText(addressTexts);
-        } catch (error) {
-            console.or('Помилка копіювання:', error);
-        }
-    };
+    endEditRoute = () => {
+         this.isEditRoute = false;
+    }
 }

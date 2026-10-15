@@ -90,4 +90,20 @@ export default class RouteResultComponent extends Component {
             })),
         }));
     }
+
+
+    copyAddressTextToClipboard = () => {
+        let addressTexts = '';
+        for (const stop of this.args.route?.orderedStops) {
+            if (stop.index) {
+                addressTexts += `${stop.address}\n`;
+            }
+        }
+
+        try {
+            navigator.clipboard.writeText(addressTexts);
+        } catch (error) {
+            console.or('Помилка копіювання:', error);
+        }
+    };
 }

@@ -1,29 +1,42 @@
 <section class="route-settings">
-  <header class="route-settings__header">
-    <LinkTo @route="index">До побудови маршруту</LinkTo>
-  </header>
+    <header class="route-settings__header">
+        <LinkTo @route="index">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-chevron-left"
+                viewBox="0 0 16 16"
+            >
+                <path
+                    fill-rule="evenodd"
+                    d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"
+                />
+            </svg> Назад до побудови маршруту</LinkTo>
+    </header>
 
-  <form class="route-settings__form" {{on "submit" this.save}}>
-    <label for="route-settings-spreadsheet">Посилання на Google Таблицю з даними</label>
-    <input
-      id="route-settings-spreadsheet"
-      type="url"
-      value={{this.spreadsheetUrl}}
-      placeholder="https://docs.google.com/spreadsheets/d/ID/edit"
-      {{on "input" this.updateSpreadsheetUrl}}
-    />
+    <form class="route-settings__form" {{on "submit" this.save}}>
+        <label for="route-settings-spreadsheet">Посилання на Google Таблицю з даними</label>
+        <input
+            id="route-settings-spreadsheet"
+            type="url"
+            value={{this.spreadsheetUrl}}
+            placeholder="https://docs.google.com/spreadsheets/d/ID/edit"
+            {{on "input" this.updateSpreadsheetUrl}}
+        />
 
-    <label for="route-settings-visicom">Ключ Visicom</label>
-    <input
-      id="route-settings-visicom"
-      type="text"
-      value={{this.visicomApiKey}}
-      autocomplete="off"
-      {{on "input" this.updateVisicomApiKey}}
-    />
+        <label for="route-settings-visicom">Ключ Visicom</label>
+        <input
+            id="route-settings-visicom"
+            type="text"
+            value={{this.visicomApiKey}}
+            autocomplete="off"
+            {{on "input" this.updateVisicomApiKey}}
+        />
 
-    <button class="route-builder__button" type="submit">Зберегти налаштування</button>
-    {{#if this.errorMessage}}<p class="route-builder__error" role="alert">{{this.errorMessage}}</p>{{/if}}
-    {{#if this.saved}}<p class="route-settings__saved" role="status">Налаштування збережено.</p>{{/if}}
-  </form>
+        <button class="route-builder__button" type="submit">Зберегти налаштування</button>
+        {{#if this.errorMessage}}<p class="route-builder__error" role="alert">{{this.errorMessage}}</p>{{/if}}
+        {{#if this.saved}}<p class="route-settings__saved" role="status">Налаштування збережено.</p>{{/if}}
+    </form>
 </section>
