@@ -5,6 +5,7 @@ import { splitRouteParts } from '../services/route-optimizer';
 
 export default class RouteResultComponent extends Component {
     @tracked isNaming = false;
+    @tracked isDeleting = false;
     @tracked bookmarkName = '';
     @tracked actionError = null;
 
@@ -18,6 +19,16 @@ export default class RouteResultComponent extends Component {
     @action
     updateBookmarkName(event) {
         this.bookmarkName = event.target.value;
+    }
+
+    @action
+    startDeleteRoute() {
+        this.isDeleting = true;
+    }
+
+    @action
+    cancelDeleteRoute() {
+        this.isDeleting = false;
     }
 
     @action
@@ -90,7 +101,6 @@ export default class RouteResultComponent extends Component {
             })),
         }));
     }
-
 
     copyAddressTextToClipboard = () => {
         let addressTexts = '';
