@@ -22,7 +22,7 @@ const ADDRESS_CORRECTIONS = {
     'Зарічна 102': 'Замкова 48',
     'Новополонська 174': 'Замкова 42',
     'Перемоги 51': 'Лесі Українки 177',
-    'Романа 53а': 'Романа 47'
+    'Романа 53а': 'Романа 47',
 };
 
 /**
@@ -30,6 +30,7 @@ const ADDRESS_CORRECTIONS = {
  * Example: 'Староміська 113': [YOUR_LATITUDE, YOUR_LONGITUDE],
  */
 export const ADDRESS_COORDINATES = {
+    'Староміська 117а': [50.117655827875964, 27.48648759921174],
     'Староміська 113': [50.1147, 27.48649],
     'Староміська 9': [50.108879834327645, 27.496188381506407],
     'Староміська 23': [50.10852838767722, 27.4942199526854],
@@ -90,7 +91,16 @@ export function correctStreetName(address) {
 
 export function configuredCoordinate(address) {
     const key = normalizeAddressKey(address);
-    const match = Object.entries(ADDRESS_COORDINATES).find(([candidate]) => normalizeAddressKey(candidate) === key);
+
+    // Наприклад: «староміська 117а/25» → «староміська 117а».
+    const baseKey = key.replace(/\s*\/\s*\d+$/u, '').trim();
+
+    const entries = Object.entries(ADDRESS_COORDINATES);
+
+    const match =
+        entries.find(([candidate]) => normalizeAddressKey(candidate) === key) ??
+        entries.find(([candidate]) => normalizeAddressKey(candidate) === baseKey);
+
     if (!match) return null;
 
     const coordinate = match[1];
