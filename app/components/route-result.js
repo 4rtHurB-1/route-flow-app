@@ -83,9 +83,9 @@ export default class RouteResultComponent extends Component {
                     number,
                     href: `tel:${number}`,
                 }))[0],
-                visicomUrl: stop.vizcomId
+                mapUrl: stop.vizcomId
                     ? `https://maps.visicom.ua/i/${encodeURIComponent(stop.vizcomId)}?lang=uk`
-                    : null,
+                    : `https://www.google.com/maps/search/?api=1&query=${stop.coordinate[0]},${stop.coordinate[1]}`,
                 isFinish: partIndex === lastPartIndex && stopIndex === part.stops.length - 1,
             })),
         }));

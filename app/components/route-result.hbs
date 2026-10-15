@@ -23,8 +23,8 @@
                 {{#each part.stops as |stop index|}}
                     <li class="route-result__stop">
                         <span class="route-result__stop-address">
-                            {{#if stop.visicomUrl}}
-                                <a href={{stop.visicomUrl}} target="_blank" rel="noopener noreferrer">{{add index 1}}.
+                            {{#if stop.mapUrl}}
+                                <a href={{stop.mapUrl}} target="_blank" rel="noopener noreferrer">{{add index 1}}.
                                     {{stop.address}}</a>
                             {{else}}
                                 <strong>{{add index 1}}. {{stop.address}}</strong>
