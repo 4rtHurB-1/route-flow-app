@@ -77,14 +77,19 @@ export default class RouteOptimizerService extends Service {
     }) {
         visicomApiKey = this.appSettings.visicomApiKey || visicomApiKey;
         const originalAddresses = normalizeAddresses(addresses);
+        const directives = originalAddresses.map(parseAddressDirective);
+        validateAddressDirectives(directives, resolutions);
         const entries = originalAddresses.flatMap((originalAddress, index) => {
             const choice = resolutions[index];
             if (choice?.type === 'remove') return [];
-            const address = choice?.type === 'rename' ? String(choice.address ?? '').trim() : originalAddress;
+            const directive = directives[index];
+            const address = choice?.type === 'rename' ? String(choice.address ?? '').trim() : directive.address;
             return [
                 {
                     index,
                     address,
+                    role: directive.role,
+                    fixedPosition: directive.fixedPosition,
                     queryAddress: correctStreetName(
                         choice?.type === 'rename' ? address : getCorrection(corrections, address) ?? address
                     ),
@@ -95,7 +100,7 @@ export default class RouteOptimizerService extends Service {
         if (entries.some((entry) => !entry.address)) {
             throw new RouteOptimizerError('Введіть нову назву для кожної зміненої вулиці.');
         }
-        if (!entries.length) {
+        if (!entries.some((entry) => entry.role !== 'start')) {
             throw new RouteOptimizerError('Додайте хоча б одну адресу до маршруту.');
         }
 
@@ -212,27 +217,54 @@ export default class RouteOptimizerService extends Service {
             points = attachPhones(points, []);
         }
 
-        const originPoint = hasOrigin(origin) ? parseOrigin(origin) : await this.currentLocation.getOrigin({ points });
+        const startEntry = entries.find((entry) => entry.role === 'start');
+        const originPoint = startEntry
+            ? points.find((point) => point.index === startEntry.index)
+            : hasOrigin(origin) ? parseOrigin(origin) : await this.currentLocation.getOrigin({ points });
+        const stops = points.filter((point) => point.index !== startEntry?.index);
 
         if (!googleMapsApiKey?.trim()) {
             throw new RouteOptimizerError('Не налаштовано GOOGLE_MAPS_API_KEY.');
         }
 
-        const destinationIndex = chooseDestinationIndex(originPoint, points);
-        const optimized = await this.#optimizeForDestination({
-            origin: originPoint,
-            stops: points,
-            destinationIndex,
-            apiKey: googleMapsApiKey.trim(),
+        const finishEntry = entries.find((entry) => entry.role === 'finish');
+        const fixedEntries = entries.filter((entry) => entry.role === 'fixed');
+        const finish = finishEntry && stops.find((stop) => stop.index === finishEntry.index);
+        const freeStops = stops.filter((stop) => {
+            const entry = entries.find((item) => item.index === stop.index);
+            return entry.role === 'normal';
         });
+        let optimized;
+        if (fixedEntries.length) {
+            const orderedFree = await this.#orderFreeStops({
+                origin: originPoint, stops: freeStops, finish, apiKey: googleMapsApiKey.trim(),
+            });
+            const fixedByPosition = new Map(fixedEntries.map((entry) => [
+                entry.fixedPosition, stops.find((stop) => stop.index === entry.index),
+            ]));
+            const orderedStops = [];
+            let freeIndex = 0;
+            for (let position = 1; position <= stops.length - (finish ? 1 : 0); position += 1) {
+                orderedStops.push(fixedByPosition.get(position) ?? orderedFree[freeIndex++]);
+            }
+            if (finish) orderedStops.push(finish);
+            optimized = { points: [originPoint, ...orderedStops] };
+        } else {
+            const destinationIndex = finish
+                ? stops.indexOf(finish)
+                : chooseDestinationIndex(originPoint, stops);
+            optimized = await this.#optimizeForDestination({
+                origin: originPoint,
+                stops,
+                destinationIndex,
+                apiKey: googleMapsApiKey.trim(),
+            });
+        }
         const routeParts = splitRouteParts(optimized.points);
 
         return {
-            inputAddresses: entries.map((entry) => entry.address),
+            inputAddresses: entries.map(formatEntry),
             orderedStops: optimized.points,
-            distanceMeters: optimized.distanceMeters,
-            duration: optimized.duration,
-            durationSeconds: parseDurationSeconds(optimized.duration),
             routeParts,
             googleMapsUrls: routeParts.map((part) => part.googleMapsUrl),
             appleMapsUrls: routeParts.map((part) => part.appleMapsUrl),
@@ -331,10 +363,18 @@ export default class RouteOptimizerService extends Service {
         return repaired;
     }
 
-    async #optimizeForDestination({ origin, stops, destinationIndex, apiKey }) {
-        const destination = stops[destinationIndex];
-        const intermediates = stops.filter((_, index) => index !== destinationIndex);
-        const shouldOptimize = intermediates.length > 1;
+    async #orderFreeStops({ origin, stops, finish, apiKey }) {
+        if (stops.length < 2) return [...stops];
+        const destination = finish ?? stops[chooseDestinationIndex(origin, stops)];
+        const intermediates = finish ? stops : stops.filter((stop) => stop !== destination);
+        if (intermediates.length < 2) return [...intermediates, ...(!finish ? [destination] : [])];
+        const optimized = await this.#requestRoute(origin, destination, intermediates, apiKey);
+        const order = optimized.optimizedIntermediateWaypointIndex ?? [];
+        validateGoogleOrder(order, intermediates.length);
+        return [...order.map((index) => intermediates[index]), ...(!finish ? [destination] : [])];
+    }
+
+    async #requestRoute(origin, destination, intermediates, apiKey) {
         const payload = await fetchJson(
             GOOGLE_ROUTES_URL,
             {
@@ -342,8 +382,7 @@ export default class RouteOptimizerService extends Service {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Goog-Api-Key': apiKey,
-                    'X-Goog-FieldMask':
-                        'routes.optimizedIntermediateWaypointIndex,' + 'routes.distanceMeters,routes.duration',
+                    'X-Goog-FieldMask': 'routes.optimizedIntermediateWaypointIndex',
                 },
                 body: JSON.stringify({
                     origin: googleWaypoint(origin),
@@ -359,27 +398,22 @@ export default class RouteOptimizerService extends Service {
             },
             'Google Routes API'
         );
-
         const route = payload?.routes?.[0];
-        if (!route) {
-            throw new RouteOptimizerError(`Google Routes API не повернув маршрут: ${JSON.stringify(payload)}`);
-        }
+        if (!route) throw new RouteOptimizerError(`Google Routes API не повернув маршрут: ${JSON.stringify(payload)}`);
+        return route;
+    }
 
-        const order = shouldOptimize
-            ? route.optimizedIntermediateWaypointIndex ?? []
-            : intermediates.map((_, index) => index);
-        const expectedOrder = intermediates.map((_, index) => index);
-        const sortedOrder = Array.isArray(order) ? [...order].sort((a, b) => a - b) : [];
-        console.log(JSON.stringify(sortedOrder), JSON.stringify(expectedOrder));
-        if (JSON.stringify(sortedOrder) !== JSON.stringify(expectedOrder)) {
-            throw new RouteOptimizerError(`Google Routes API повернув некоректний порядок: ${JSON.stringify(order)}`);
-        }
+    async #optimizeForDestination({ origin, stops, destinationIndex, apiKey }) {
+        const destination = stops[destinationIndex];
+        const intermediates = stops.filter((_, index) => index !== destinationIndex);
+        const shouldOptimize = intermediates.length > 1;
+        if (!shouldOptimize) return { points: [origin, ...intermediates, destination] };
+        const route = await this.#requestRoute(origin, destination, intermediates, apiKey);
 
-        return {
-            points: [origin, ...order.map((index) => intermediates[index]), destination],
-            distanceMeters: route.distanceMeters,
-            duration: route.duration,
-        };
+        const order = route.optimizedIntermediateWaypointIndex ?? [];
+        validateGoogleOrder(order, intermediates.length);
+
+        return { points: [origin, ...order.map((index) => intermediates[index]), destination] };
     }
 }
 
@@ -417,6 +451,55 @@ function normalizeAddresses(value) {
         throw new RouteOptimizerError(`Дозволено не більше ${MAX_ADDRESSES} адрес в одному маршруті.`);
     }
     return addresses;
+}
+
+function parseAddressDirective(line) {
+    const match = /^(start|finish|\d+)\s*:\s*(.*)$/iu.exec(line);
+    if (!match) return { role: 'normal', address: line, fixedPosition: null };
+    const label = match[1].toLowerCase();
+    const address = match[2].trim();
+    if (!address) throw new RouteOptimizerError(`Вкажіть адресу після «${match[1]}:».`);
+    if (label === 'start' || label === 'finish') return { role: label, address, fixedPosition: null };
+    const fixedPosition = Number(label);
+    if (!Number.isSafeInteger(fixedPosition) || fixedPosition < 1) {
+        throw new RouteOptimizerError('Номер фіксованої адреси має бути цілим числом від 1.');
+    }
+    return { role: 'fixed', address, fixedPosition };
+}
+
+function validateAddressDirectives(directives, resolutions) {
+    const active = directives.filter((_, index) => resolutions[index]?.type !== 'remove');
+    for (const role of ['start', 'finish']) {
+        if (active.filter((item) => item.role === role).length > 1) {
+            throw new RouteOptimizerError(`Можна вказати лише одну адресу «${role}:».`);
+        }
+    }
+    const hasFinish = active.some((item) => item.role === 'finish');
+    const maxFixed = active.filter((item) => item.role !== 'start').length - (hasFinish ? 1 : 0);
+    const positions = new Set();
+    for (const item of active.filter((entry) => entry.role === 'fixed')) {
+        if (item.fixedPosition > maxFixed) {
+            throw new RouteOptimizerError(`Позиція ${item.fixedPosition} виходить за межі маршруту.`);
+        }
+        if (positions.has(item.fixedPosition)) {
+            throw new RouteOptimizerError(`Позиція ${item.fixedPosition} вказана для кількох адрес.`);
+        }
+        positions.add(item.fixedPosition);
+    }
+}
+
+function formatEntry(entry) {
+    if (entry.role === 'start' || entry.role === 'finish') return `${entry.role}: ${entry.address}`;
+    if (entry.role === 'fixed') return `${entry.fixedPosition}: ${entry.address}`;
+    return entry.address;
+}
+
+function validateGoogleOrder(order, count) {
+    const expected = Array.from({ length: count }, (_, index) => index);
+    const sorted = Array.isArray(order) ? [...order].sort((a, b) => a - b) : [];
+    if (JSON.stringify(sorted) !== JSON.stringify(expected)) {
+        throw new RouteOptimizerError(`Google Routes API повернув некоректний порядок: ${JSON.stringify(order)}`);
+    }
 }
 
 function getCorrection(corrections, address) {
@@ -596,11 +679,6 @@ function splitAppleRouteParts(points) {
     return parts;
 }
 
-function parseDurationSeconds(duration) {
-    const match = /^(\d+(?:\.\d+)?)s$/u.exec(duration ?? '');
-    return match ? Number(match[1]) : null;
-}
-
 function normalizePhoneAddress(value) {
     return String(value ?? '')
         .trim()
@@ -629,7 +707,7 @@ function attachPhones(points, results) {
 
 function appleMapsUrl(points) {
     const url = new URL('https://maps.apple.com/directions');
-    //url.searchParams.set('source', coordinateText(points[0]));
+    url.searchParams.set('source', coordinateText(points[0]));
     url.searchParams.set('destination', coordinateText(points.at(-1)));
     for (const waypoint of points.slice(1, -1)) {
         url.searchParams.append('waypoint', coordinateText(waypoint));

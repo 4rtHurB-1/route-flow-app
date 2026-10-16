@@ -30,8 +30,7 @@ export default class RouteHistoryService extends Service {
       .split(/\r?\n/u)
       .map((address) => address.trim())
       .filter(Boolean);
-    const optimizedAddresses = (route?.orderedStops ?? [])
-      .filter((stop) => stop.address !== 'Поточне місцеположення')
+    const optimizedAddresses = (route?.orderedStops ?? []).slice(1)
       .map((stop) => stop.address);
     const titleAddresses =
       optimizedAddresses.length > 0 ? optimizedAddresses : inputAddresses;

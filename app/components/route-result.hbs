@@ -1,15 +1,4 @@
 <div class="route-result">
-    {{#if this.distanceText}}
-        <p class="route-result__summary">
-            Відстань:
-            <strong>{{this.distanceText}}</strong>
-            {{#if this.durationText}}
-                · Час:
-                <strong>{{this.durationText}}</strong>
-            {{/if}}
-        </p>
-    {{/if}}
-
     {{#if @route.phoneLookupWarning}}
         <p class="route-result__warning" role="status">
             Маршрут побудовано, але телефони не завантажено:
