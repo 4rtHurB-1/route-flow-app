@@ -6,7 +6,6 @@ const GOOGLE_ROUTES_URL = 'https://routes.googleapis.com/directions/v2:computeRo
 const GOOGLE_MAPS_API_KEY = 'AIzaSyAQnddZ7O-hoZay6MKFu57o66N_2C0L76E';
 
 const PHONES_API_URL = 'https://route-flow-details-api.netlify.app/api/contacts';
-//'https://script.google.com/macros/s/AKfycbyOY9LggM1CLWXtG-VfSP1XZdCZTw8GavQgQTuAq0GNPvq9crHxAYdg8jxWs-J3-SFp/exec';
 
 const MAX_ADDRESSES = 26;
 const MAX_POINTS_PER_MAPS_URL = 9;
