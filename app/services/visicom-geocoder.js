@@ -1,6 +1,6 @@
 import Service from '@ember/service';
 
-export const DEFAULT_VISICOM_API_KEY = 'dbea4a39bfcc17b3859fe30c26eb6ae4';
+export const DEFAULT_VISICOM_API_KEY = '66951fc162171cfd99b224b89c1a7df0';
 export const VISICOM_GEOCODE_URL =
   'https://api.visicom.ua/data-api/5.0/uk/geocode.json';
 export const VISICOM_FEATURE_URL =
